@@ -88,6 +88,10 @@ class UpgradeData implements UpgradeDataInterface
             $this->runUpgrade400($setup);
         }
 
+        if (version_compare($context->getVersion(), '4.0.1', '<')) {
+            $this->runUpgrade401($setup);
+        }
+
         $setup->endSetup();
     }
 
@@ -299,6 +303,26 @@ class UpgradeData implements UpgradeDataInterface
                 0,
                 'Customer Create (Post)',
                 '/customer/account/createpost'
+            ),
+        ];
+
+        $setup->getConnection()->insertMultiple(
+            $setup->getTable('bitexpert_forcelogin_whitelist'),
+            $whitelistEntries
+        );
+    }
+    
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function runUpgrade401(ModuleDataSetupInterface $setup)
+    {
+        $whitelistEntries = [
+            $this->getWhitelistEntryAsArray(
+                0,
+                'Paypal',
+                '/paypal/ipn/'
             ),
         ];
 
