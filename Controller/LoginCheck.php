@@ -166,7 +166,9 @@ class LoginCheck implements LoginCheckInterface
         }
 
         // Set Url To redirect ,using standard method of magento
-        $this->customerSession->setBeforeAuthUrl($url);
+        if (strpos($url, 'customer/section/load') == false && strpos($url, '_=') == false) {
+            $this->customerSession->setBeforeAuthUrl($url);
+        }
 
         // check if current url is a match with one of the ignored urls
         /** @var \BitExpert\ForceCustomerLogin\Model\WhitelistEntry $rule */
