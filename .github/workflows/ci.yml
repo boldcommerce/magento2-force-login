@@ -11,12 +11,13 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.3', '7.4', '7.4']
-        magento-versions: ['2.4.0', '2.4.1', '2.4.2']
-        coveralls: [false]
+        php-versions: ['7.4']
+        magento: ['2.4.0', '2.4.1', '2.4.2', '2.4.3']
+        coveralls: [ false ]
         include:
           - operating-system: 'ubuntu-latest'
-            php-versions: '7.4'
+            php-versions: '8.1'
+            magento: '2.4.4'
             coveralls: true
     steps:
       - name: Checkout repo

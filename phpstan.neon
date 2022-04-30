@@ -30,14 +30,9 @@ parameters:
             message: '~Call to an undefined method Magento\\Framework\\App\\RequestInterface::isPost\(\)~'
             path: Controller/LoginCheck.php
         -
-            message: '~Parameter #3.*~'
-            path: Block/Adminhtml/Manage/Create.php
-        -
             message: '~Method.*~'
             path: Setup/UpgradeData.php
         -
             message: '~Property.*~'
             path: Setup/UpgradeData.php
-        -
-            message: '~Parameter.*~'
-            path: Setup/UpgradeData.php
+
