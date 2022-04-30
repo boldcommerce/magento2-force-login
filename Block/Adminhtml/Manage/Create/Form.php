@@ -65,21 +65,21 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
         // Try to fetch entity if id is provided
         $whitelistEntry = $this->entityFactory->create()->load($this->_request->getParam('id', 0));
         if (!$whitelistEntry->getId()) {
-            $label = \base64_decode($this->_request->getParam('label'));
-            if ($label) {
-                $whitelistEntry->setLabel($label);
+            $label = (string) $this->_request->getParam('label');
+            if (!empty($label)) {
+                $whitelistEntry->setLabel(\base64_decode($label));
             }
-            $urlRule = \base64_decode($this->_request->getParam('url_rule'));
-            if ($urlRule) {
-                $whitelistEntry->setUrlRule($urlRule);
+            $urlRule = (string) $this->_request->getParam('url_rule');
+            if (!empty($urlRule)) {
+                $whitelistEntry->setUrlRule(\base64_decode($urlRule));
             }
-            $strategy = \base64_decode($this->_request->getParam('strategy'));
-            if ($strategy) {
-                $whitelistEntry->setStrategy($strategy);
+            $strategy = (string) $this->_request->getParam('strategy');
+            if (!empty($strategy)) {
+                $whitelistEntry->setStrategy(\base64_decode($strategy));
             }
-            $storeId = \base64_decode($this->_request->getParam('store_id'));
-            if ($storeId) {
-                $whitelistEntry->setStoreId((int)$storeId);
+            $storeId = (string) $this->_request->getParam('store_id');
+            if (!empty($storeId)) {
+                $whitelistEntry->setStoreId((int)\base64_decode($storeId));
             }
         }
 
