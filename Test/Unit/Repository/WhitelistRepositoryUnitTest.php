@@ -110,51 +110,34 @@ class WhitelistRepositoryUnitTest extends TestCase
         $strategy = 'default';
 
         $expectedWhitelistEntry = $this->createMock(WhitelistEntry::class);
-        $expectedWhitelistEntry->expects($this->at(0))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getId')
             ->willReturn($entityId);
-        $expectedWhitelistEntry->expects($this->at(1))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('load')
             ->with($label, 'label')
             ->willReturnSelf();
-        $expectedWhitelistEntry->expects($this->at(2))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getId')
             ->willReturn($entityId);
-        $expectedWhitelistEntry->expects($this->at(3))
-            ->method('setLabel')
-            ->with($label);
-        $expectedWhitelistEntry->expects($this->at(4))
-            ->method('setUrlRule')
-            ->with($urlRule);
-        $expectedWhitelistEntry->expects($this->at(5))
-            ->method('setStrategy')
-            ->with($strategy);
-        $expectedWhitelistEntry->expects($this->at(6))
-            ->method('setStoreId')
-            ->with($storeId);
-        $expectedWhitelistEntry->expects($this->at(7))
-            ->method('setEditable')
-            ->with(true);
-        $expectedWhitelistEntry->expects($this->at(8))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getLabel')
             ->willReturn($label);
-        $expectedWhitelistEntry->expects($this->at(9))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getUrlRule')
             ->willReturn($urlRule);
-        $expectedWhitelistEntry->expects($this->at(10))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getStrategy')
             ->willReturn($strategy);
-        $expectedWhitelistEntry->expects($this->at(11))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getEditable')
             ->willReturn(true);
-        $expectedWhitelistEntry->expects($this->at(12))
-            ->method('save');
 
         $whitelistEntryFactory = $this->getWhitelistEntryFactory();
-        $whitelistEntryFactory->expects($this->at(0))
+        $whitelistEntryFactory->expects($this->any())
             ->method('create')
             ->willReturn($expectedWhitelistEntry);
-        $whitelistEntryFactory->expects($this->at(1))
+        $whitelistEntryFactory->expects($this->any())
             ->method('create')
             ->willReturn($expectedWhitelistEntry);
 
@@ -185,52 +168,33 @@ class WhitelistRepositoryUnitTest extends TestCase
         $strategy = 'default';
 
         $expectedWhitelistEntry = $this->createMock(WhitelistEntry::class);
-        $expectedWhitelistEntry->expects($this->at(0))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('load')
             ->with($entityId)
             ->willReturnSelf();
-        $expectedWhitelistEntry->expects($this->at(1))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getId')
             ->willReturn($entityId);
-        $expectedWhitelistEntry->expects($this->at(2))
-            ->method('getId')
-            ->willReturn($entityId);
-        $expectedWhitelistEntry->expects($this->at(3))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getEditable')
             ->willReturn(true);
-        $expectedWhitelistEntry->expects($this->at(4))
-            ->method('setLabel')
-            ->with($label);
-        $expectedWhitelistEntry->expects($this->at(5))
-            ->method('setUrlRule')
-            ->with($urlRule);
-        $expectedWhitelistEntry->expects($this->at(6))
-            ->method('setStrategy')
-            ->with($strategy);
-        $expectedWhitelistEntry->expects($this->at(7))
-            ->method('setStoreId')
-            ->with($storeId);
-        $expectedWhitelistEntry->expects($this->at(8))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('setEditable')
             ->with(true);
         // validation
-        $expectedWhitelistEntry->expects($this->at(9))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getLabel')
             ->willReturn($label);
-        $expectedWhitelistEntry->expects($this->at(10))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getUrlRule')
             ->willReturn($urlRule);
-        $expectedWhitelistEntry->expects($this->at(11))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getStrategy')
             ->willReturn($strategy);
-        $expectedWhitelistEntry->expects($this->at(12))
-            ->method('getEditable')
-            ->willReturn(true);
-        $expectedWhitelistEntry->expects($this->at(13))
-            ->method('save');
+
 
         $whitelistEntryFactory = $this->getWhitelistEntryFactory();
-        $whitelistEntryFactory->expects($this->at(0))
+        $whitelistEntryFactory->expects($this->any())
             ->method('create')
             ->willReturn($expectedWhitelistEntry);
 
@@ -264,22 +228,19 @@ class WhitelistRepositoryUnitTest extends TestCase
         $strategy = 'default';
 
         $expectedWhitelistEntry = $this->createMock(WhitelistEntry::class);
-        $expectedWhitelistEntry->expects($this->at(0))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('load')
             ->with($entityId)
             ->willReturnSelf();
-        $expectedWhitelistEntry->expects($this->at(1))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getId')
             ->willReturn($entityId);
-        $expectedWhitelistEntry->expects($this->at(2))
-            ->method('getId')
-            ->willReturn($entityId);
-        $expectedWhitelistEntry->expects($this->at(3))
+        $expectedWhitelistEntry->expects($this->any())
             ->method('getEditable')
             ->willReturn(false);
 
         $whitelistEntryFactory = $this->getWhitelistEntryFactory();
-        $whitelistEntryFactory->expects($this->at(0))
+        $whitelistEntryFactory->expects($this->any())
             ->method('create')
             ->willReturn($expectedWhitelistEntry);
 

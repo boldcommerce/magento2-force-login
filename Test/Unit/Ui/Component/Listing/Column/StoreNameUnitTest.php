@@ -50,14 +50,13 @@ class StoreNameUnitTest extends TestCase
             ->willReturn('foobar');
 
         $storeManager = $this->getStoreManager();
-        $storeManager->expects($this->at(0))
+        $storeManager->expects($this->any())
             ->method('getStore')
-            ->with(0)
-            ->willReturn($globalStore);
-        $storeManager->expects($this->at(1))
-            ->method('getStore')
-            ->with($storeId)
-            ->willReturn($store);
+            ->willReturnMap([
+                [0, $globalStore],
+                [$storeId, $store]
+            ]);
+
 
         $action = new StoreName(
             $this->getContext(),

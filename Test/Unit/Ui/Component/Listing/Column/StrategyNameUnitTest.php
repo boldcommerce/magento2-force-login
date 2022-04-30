@@ -37,15 +37,13 @@ class StrategyNameUnitTest extends TestCase
             ->willReturn('FooBar');
 
         $strategyManager = $this->getStrategyManager();
-        $strategyManager->expects($this->at(0))
+        $strategyManager->expects($this->any())
             ->method('has')
-            ->with('baz')
-            ->willReturn(false);
-        $strategyManager->expects($this->at(1))
-            ->method('has')
-            ->with('foobar')
-            ->willReturn(true);
-        $strategyManager->expects($this->at(2))
+            ->willReturnMap([
+                ['baz', false],
+                ['foobar', true]
+            ]);
+        $strategyManager->expects($this->any())
             ->method('get')
             ->with('foobar')
             ->willReturn($strategy);
