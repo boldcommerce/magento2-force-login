@@ -11,7 +11,6 @@
 
 namespace BitExpert\ForceCustomerLogin\Controller\Adminhtml\Manage;
 
-use BitExpert\ForceCustomerLogin\Api\Data\WhitelistEntryFactoryInterface;
 use BitExpert\ForceCustomerLogin\Api\Repository\WhitelistRepositoryInterface;
 use BitExpert\ForceCustomerLogin\Model\WhitelistEntry;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -28,10 +27,6 @@ use Magento\Framework\Controller\ResultInterface;
 class RestoreDefault extends \Magento\Backend\App\Action
 {
     /**
-     * @var WhitelistEntryFactoryInterface
-     */
-    private $whitelistEntityFactory;
-    /**
      * @var WhitelistRepositoryInterface
      */
     private $whitelistRepository;
@@ -40,10 +35,6 @@ class RestoreDefault extends \Magento\Backend\App\Action
      */
     private $redirectFactory;
     /**
-     * @var Context
-     */
-    private $context;
-    /**
      * @var array Default routes
      */
     private $defaultRoutes;
@@ -51,22 +42,18 @@ class RestoreDefault extends \Magento\Backend\App\Action
     /**
      * Save constructor.
      *
-     * @param WhitelistEntryFactoryInterface $whitelistEntityFactory
      * @param WhitelistRepositoryInterface $whitelistRepository
      * @param Context $context
      * @param array $defaultRoutes
      */
     public function __construct(
-        WhitelistEntryFactoryInterface $whitelistEntityFactory,
         WhitelistRepositoryInterface $whitelistRepository,
         Context $context,
         array $defaultRoutes
     ) {
         parent::__construct($context);
-        $this->whitelistEntityFactory = $whitelistEntityFactory;
         $this->whitelistRepository = $whitelistRepository;
         $this->redirectFactory = $context->getResultRedirectFactory();
-        $this->context = $context;
         $this->defaultRoutes = $defaultRoutes;
     }
 
