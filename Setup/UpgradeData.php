@@ -88,8 +88,8 @@ class UpgradeData implements UpgradeDataInterface
             $this->runUpgrade400($setup);
         }
 
-        if (version_compare($context->getVersion(), '4.0.1', '<')) {
-            $this->runUpgrade401($setup);
+        if (version_compare($context->getVersion(), '5.0.0', '<')) {
+            $this->runUpgrade500($setup);
         }
 
         $setup->endSetup();
@@ -316,7 +316,7 @@ class UpgradeData implements UpgradeDataInterface
     /**
      * @param ModuleDataSetupInterface $setup
      */
-    private function runUpgrade401(ModuleDataSetupInterface $setup)
+    private function runUpgrade500(ModuleDataSetupInterface $setup)
     {
         $whitelistEntries = [
             $this->getWhitelistEntryAsArray(
