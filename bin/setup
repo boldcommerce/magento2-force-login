@@ -1,60 +1,57 @@
 #!/bin/bash
-BASE_URL=${1:-m2.localhost}
-MAGE_VERSION=${2:-2.4.1}
+set -o errexit
 
-# load the DB env information
-DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
-source "$DIR/../env/develop.env"
+# shellcheck source=../env/db.env
+source env/db.env
+# shellcheck source=../env/magento.env
+source env/magento.env
 
-bin/restart
-sleep 1 #Ensure containers are started...
+DOMAIN=${1:-magento.test}
+ES_HOST=elasticsearch
+ES_PORT=9200
 
-echo "Downloading Magento ${MAGE_VERSION} with Sample data..."
-bin/root curl -o /var/www/html/magento.tar.gz https://pubfiles.nexcess.net/magento/ce-packages/magento2-with-samples-${MAGE_VERSION}.tar.gz
-bin/rootnotty tar xvfz /var/www/html/magento.tar.gz
-bin/rootnotty rm /var/www/html/magento.tar.gz
-bin/rootnotty cp /var/www/html/nginx.conf.sample /var/www/html/nginx.conf
-bin/rootnotty chown -R app.app /var/www/html
-bin/rootnotty chmod +x bin/magento
+bin/download
 
-echo "Downloading magerun..."
-bin/root curl -o /usr/local/bin/magerun https://files.magerun.net/n98-magerun2-latest.phar
-bin/rootnotty chmod +x /usr/local/bin/magerun
+bin/stop
 
-echo "Forcing reinstall of composer deps to ensure perms & reqs..."
-bin/clinotty composer global require hirak/prestissimo
-bin/clinotty composer update
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+[ $? != 0 ] && echo "Failed to start Docker services" && exit
 
-echo "Installing composer module dependencies..."
-bin/composer install
+bin/clinotty chmod u+x bin/magento
 
-echo "Setup Magento..."
+echo "Waiting for connection to Elasticsearch..."
+bin/clinotty timeout 100 bash -c "
+    until curl --silent --output /dev/null http://$ES_HOST:$ES_PORT/_cat/health?h=st; do
+        printf '.'
+        sleep 2
+    done"
+[ $? != 0 ] && echo "Failed to connect to Elasticsearch" && exit
+
+sleep 2
+
 bin/clinotty bin/magento setup:install \
-  --db-host=$MYSQL_HOST \
-  --db-name=$MYSQL_DATABASE \
-  --db-user=$MYSQL_USER \
-  --db-password=$MYSQL_PASSWORD \
-  --base-url=https://$BASE_URL/ \
-  --base-url-secure=https://$BASE_URL/ \
-  --backend-frontname=admin \
-  --admin-firstname=Admin \
-  --admin-lastname=User \
-  --admin-email=admin@test.loc \
-  --admin-user=magento \
-  --admin-password=magento2\
-  --language=en_US \
-  --currency=EUR \
-  --timezone=Europe/Berlin \
+  --db-host="$MYSQL_HOST" \
+  --db-name="$MYSQL_DATABASE" \
+  --db-user="$MYSQL_USER" \
+  --db-password="$MYSQL_PASSWORD" \
+  --base-url=https://"$DOMAIN"/ \
+  --base-url-secure=https://"$DOMAIN"/ \
+  --backend-frontname="$MAGENTO_ADMIN_FRONTNAME" \
+  --admin-firstname="$MAGENTO_ADMIN_FIRST_NAME" \
+  --admin-lastname="$MAGENTO_ADMIN_LAST_NAME" \
+  --admin-email="$MAGENTO_ADMIN_EMAIL" \
+  --admin-user="$MAGENTO_ADMIN_USER" \
+  --admin-password="$MAGENTO_ADMIN_PASSWORD" \
+  --language="$MAGENTO_LOCALE" \
+  --currency="$MAGENTO_CURRENCY" \
+  --timezone="$MAGENTO_TIMEZONE" \
   --search-engine=elasticsearch7 \
-  --elasticsearch-host=elasticsearch \
+  --elasticsearch-host=$ES_HOST \
+  --elasticsearch-port=$ES_PORT \
   --use-rewrites=1
 
 echo "Disable Magento 2FAuth module..."
-bin/clinotty bin/magento module:disable Magento_TwoFactorAuth
-
-echo "Clearing the cache for good measure..."
-bin/clinotty bin/magento cache:flush
+bin/magento module:disable Magento_TwoFactorAuth
 
 echo "Installing Force Login Composer module..."
 bin/rootnotty chmod +x bin/magento /var/www/html/BitExpert/ForceCustomerLogin/validate_m2_package.php
@@ -67,23 +64,20 @@ echo "Enabling Force Login module..."
 bin/clinotty bin/magento module:enable BitExpert_ForceCustomerLogin
 bin/clinotty bin/magento setup:upgrade
 
-echo "Installing Sample data..."
-bin/clinotty bin/magento sampledata:deploy
-
-echo "Turning on developer mode.."
-bin/clinotty bin/magento deploy:mode:set developer
-
 echo "Forcing deploy of static content to speed up initial requests..."
 bin/clinotty bin/magento setup:static-content:deploy -f
 
 echo "Re-indexing with Elasticsearch..."
 bin/clinotty bin/magento indexer:reindex
 
-echo "Generating SSL certificate..."
-bin/setup-ssl $BASE_URL
+echo "Setting basic URL and generating SSL certificate..."
+bin/setup-domain "${DOMAIN}"
 
-echo "Restarting containers with host bind mounts for dev..."
-bin/restart
+echo "Clearing the cache to apply updates..."
+bin/clinotty bin/magento cache:flush
+
+echo "Turning on developer mode.."
+bin/clinotty bin/magento deploy:mode:set developer
 
 echo "Docker development environment setup complete."
-echo "You may now access your Magento instance at https://${BASE_URL}/"
+echo "You may now access your Magento instance at https://${DOMAIN}/"

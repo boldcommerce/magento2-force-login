@@ -6,3 +6,4 @@
 # make sure the phpfpm container is running before trying to execute the git hook
 docker-compose up --no-recreate -d phpfpm
 docker-compose exec -w /var/www/html/BitExpert/ForceCustomerLogin/ -T phpfpm "$@"
+

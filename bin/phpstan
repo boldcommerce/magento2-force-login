@@ -1,2 +1,0 @@
-#!/bin/bash
-bin/cli /var/www/html/BitExpert/ForceCustomerLogin/vendor/bin/phpstan analyse -c /var/www/html/BitExpert/ForceCustomerLogin/html/phpstan.neon
