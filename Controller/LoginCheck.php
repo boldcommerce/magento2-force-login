@@ -165,11 +165,6 @@ class LoginCheck implements LoginCheckInterface
             return true;
         }
 
-        // Set Url To redirect ,using standard method of magento
-        if (strpos($url, 'customer/section/load') == false && strpos($url, '_=') == false) {
-            $this->customerSession->setBeforeAuthUrl($url);
-        }
-
         // check if current url is a match with one of the ignored urls
         /** @var \BitExpert\ForceCustomerLogin\Model\WhitelistEntry $rule */
         foreach ($this->whitelistRepository->getCollection()->getItems() as $rule) {
@@ -181,6 +176,11 @@ class LoginCheck implements LoginCheckInterface
             if ($strategy->isMatch($path, $rule)) {
                 return false;
             }
+        }
+
+        // Set Url To redirect using standard method of magento
+        if (strpos($url, 'customer/section/load') === false && strpos($url, '_=') === false) {
+            $this->customerSession->setBeforeAuthUrl($url);
         }
 
         // Add any GET query parameters back to the path after making our url checks.
