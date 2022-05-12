@@ -104,7 +104,8 @@ class LoginCheckUnitTest extends TestCase
         return $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
             ->setMethods([
-                'setAfterLoginReferer'
+                'setAfterLoginReferer',
+                'getData'
             ])
             ->getMock();
     }
@@ -198,37 +199,6 @@ class LoginCheckUnitTest extends TestCase
     }
 
     /**
-     * Run test with url equals target, so no redirecting is happening.
-     *
-     * @test
-     * @depends testConstructor
-     */
-    public function skipMatchingWhenModuleIsDisabled()
-    {
-        $moduleCheck = $this->getModuleCheck();
-        $moduleCheck->expects($this->once())
-            ->method('isModuleEnabled')
-            ->willReturn(false);
-
-        $context = $this->getContext();
-
-        $loginCheck = new LoginCheck(
-            $context,
-            $this->getCustomerSession(),
-            $this->getSession(),
-            $this->getStoreManager(),
-            $this->getScopeConfig(),
-            $this->getWhitelistRepository(),
-            $this->getStrategyManager(),
-            $moduleCheck,
-            $this->getResponseHttp(),
-            $this->getPasswordResetHelper()
-        );
-
-        $loginCheck->execute();
-    }
-
-    /**
      * @return MockObject|UrlInterface
      */
     private function getUrl()
@@ -263,6 +233,37 @@ class LoginCheckUnitTest extends TestCase
     }
 
     /**
+     * Run test with url equals target, so no redirecting is happening.
+     *
+     * @test
+     * @depends testConstructor
+     */
+    public function skipMatchingWhenModuleIsDisabled()
+    {
+        $moduleCheck = $this->getModuleCheck();
+        $moduleCheck->expects($this->once())
+            ->method('isModuleEnabled')
+            ->willReturn(false);
+
+        $context = $this->getContext();
+
+        $loginCheck = new LoginCheck(
+            $context,
+            $this->getCustomerSession(),
+            $this->getSession(),
+            $this->getStoreManager(),
+            $this->getScopeConfig(),
+            $this->getWhitelistRepository(),
+            $this->getStrategyManager(),
+            $moduleCheck,
+            $this->getResponseHttp(),
+            $this->getPasswordResetHelper()
+        );
+
+        $loginCheck->execute();
+    }
+
+    /**
      * Run test with existing customer session, so no redirecting is happening.
      *
      * @test
@@ -286,6 +287,42 @@ class LoginCheckUnitTest extends TestCase
             $context,
             $customerSession,
             $this->getSession(),
+            $this->getStoreManager(),
+            $this->getScopeConfig(),
+            $this->getWhitelistRepository(),
+            $this->getStrategyManager(),
+            $moduleCheck,
+            $this->getResponseHttp(),
+            $this->getPasswordResetHelper()
+        );
+
+        $loginCheck->execute();
+    }
+
+    /**
+     * Run test with a Magento Admin logging in as customer, so no redirecting is happening.
+     *
+     * @test
+     * @depends testConstructor
+     */
+    public function skipMatchingWhenCustomerLoginViaMagentoAdminHappens()
+    {
+        $moduleCheck = $this->getModuleCheck();
+        $moduleCheck->expects($this->once())
+            ->method('isModuleEnabled')
+            ->willReturn(true);
+
+        $session = $this->getSession();
+        $session->expects($this->once())
+            ->method('getData')
+            ->willReturn(['after_login_referer' => 'loginascustomer']);
+
+        $context = $this->getContext();
+
+        $loginCheck = new LoginCheck(
+            $context,
+            $this->getCustomerSession(),
+            $session,
             $this->getStoreManager(),
             $this->getScopeConfig(),
             $this->getWhitelistRepository(),
