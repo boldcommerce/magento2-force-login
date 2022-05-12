@@ -134,6 +134,13 @@ class LoginCheck implements LoginCheckInterface
             return false;
         }
 
+        // allow "Login as customer" via Magento Admin
+        $sessionData = $this->session->getData();
+        $afterLoginReferer = $sessionData['after_login_referer'] ?? '';
+        if (strpos($afterLoginReferer, 'loginascustomer') !== false) {
+            return false;
+        }
+
         $url = $this->url->getCurrentUrl();
         $urlParts = \parse_url($url);
         $path = is_array($urlParts) && isset($urlParts['path']) ? $urlParts['path'] : '';
