@@ -15,6 +15,11 @@ able to browse the the website or the product catalog.
 * ACL: Restrict the administration of whitelist rules to certain backend user groups
 * Whitelisting: Define url rules as pattern to define which pages guest visitors can visit without logging in first
 * Multistore-Support: Define if whitelist rules either apply globally or for specific stores
+* [Hyvä Themes](https://hyva.io) compatible
+
+## Requirements:
+* PHP 7.4 or PHP 8.1
+* Magento 2.4.0 or higher
 
 ## Installation
 The preferred way of installing `bitexpert/magento2-force-customer-login` is through Composer. Simply add `bitexpert/magento2-force-customer-login` 
