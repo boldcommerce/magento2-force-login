@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 5.0.0
+
+### Added
+
+- [#211](https://github.com/bitExpert/magento2-force-login/pull/211) M2.4.4 compability
+- [#197](https://github.com/bitExpert/magento2-force-login/pull/197) Allow the store column to be sorted in the grid view
+- [#188](https://github.com/bitExpert/magento2-force-login/pull/188) Paypal Ipn
+
+### Deprecated
+
+- [#202](https://github.com/bitExpert/magento2-force-login/pull/202) Only support M2.4.x
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#212](https://github.com/bitExpert/magento2-force-login/pull/212) Allow Magento admin to log in as customer
+- [#209](https://github.com/bitExpert/magento2-force-login/pull/209) Fix bug for wrong redirect on customer login and account confirmation
+- [#206](https://github.com/bitExpert/magento2-force-login/pull/206) Homepage Redirect After Login Leads To incorrect url
+- [#198](https://github.com/bitExpert/magento2-force-login/pull/198) Fix undefined method call
+
 ## 4.1.0
 
 ### Added
