@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 5.0.1
+
+### Added
+
+- [#214](https://github.com/bitExpert/magento2-force-login/pull/214) Migrate to db_schema.xml
+- [#213](https://github.com/bitExpert/magento2-force-login/pull/213) Extend CI pipeline with more Magento versions
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#215](https://github.com/bitExpert/magento2-force-login/pull/215) Update default routes
+
 ## 5.0.0
 
 ### Added
