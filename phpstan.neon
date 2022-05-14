@@ -29,10 +29,3 @@ parameters:
         -
             message: '~Call to an undefined method Magento\\Framework\\App\\RequestInterface::isPost\(\)~'
             path: Controller/LoginCheck.php
-        -
-            message: '~Method.*~'
-            path: Setup/UpgradeData.php
-        -
-            message: '~Property.*~'
-            path: Setup/UpgradeData.php
-
