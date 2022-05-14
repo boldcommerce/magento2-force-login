@@ -33,6 +33,12 @@
                 <item name="/help" xsi:type="string">Help</item>
                 <item name="/sitemap.xml" xsi:type="string">Sitemap.xml</item>
                 <item name="/robots.txt" xsi:type="string">Robots.txt</item>
+                <item name="/customer/account" xsi:type="string">Customer Account Dashboard</item>
+                <item name="/page_cache/block/esi/blocks" xsi:type="string">Varnish ESI url</item>
+                <item name="/stores/store/redirect" xsi:type="string">Store-Switcher Redirect</item>
+                <item name="/stores/store/switch" xsi:type="string">Store-Switcher Switch</item>
+                <item name="/customer/account/createpost" xsi:type="string">Customer Create (Post)</item>
+                <item name="/paypal/ipn/" xsi:type="string">Paypal</item>
             </argument>
         </arguments>
     </type>
