@@ -32,6 +32,20 @@ composer.phar require bitexpert/magento2-force-customer-login
 Optional you can download the latest version [here](https://github.com/bitExpert/magento2-force-login/releases) and install the
 decompressed code in your projects directory under *app/code/BitExpert/ForceCustomerLogin*.  
 
+#### Composer error package bitexpert/magento2-force-customer-login exists
+When you have errors after installing trough composer there is probably an issue with version numbers between Packagist and Magento repo. You can update your project composer file to fix this: 
+```
+{
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/",
+      "canonical": false
+    }
+  ]
+}
+```
+
 ## Post-Install
 
 After the installment of the module source code, the module has to be enabled by the *Magento® 2* CLI.
