@@ -18,6 +18,10 @@ jobs:
           - operating-system: 'ubuntu-latest'
             php-versions: '8.1'
             magento: '2.4.4'
+            coveralls: false
+          - operating-system: 'ubuntu-latest'
+            php-versions: '8.1'
+            magento: '2.4.5'
             coveralls: true
     steps:
       - name: Checkout repo
@@ -64,10 +68,17 @@ jobs:
           composer remove --no-update magento/framework magento/module-backend magento/module-customer magento/module-store magento/module-ui
           composer require magento/framework:103.0.4 magento/module-backend:102.0.4 magento/module-customer:103.0.4 magento/module-store:101.1.4 magento/module-ui:101.2.4
 
+      - name: Install Magento 2.4.5
+        if: matrix.magento-versions == '2.4.5'
+        run: |
+          composer remove --no-update magento/framework magento/module-backend magento/module-customer magento/module-store magento/module-ui
+          composer require magento/framework:103.0.5 magento/module-backend:102.0.5 magento/module-customer:103.0.5 magento/module-store:101.1.5 magento/module-ui:101.2.5
+
       - name: Codesniffer
         run: composer cs-check
 
       - name: Static code analysis
+        if: matrix.coveralls == true
         run: composer analyze
 
       - name: Unittests
