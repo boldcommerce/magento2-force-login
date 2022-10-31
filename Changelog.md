@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 5.1.0
+
+### Added
+
+- [#224](https://github.com/bitExpert/magento2-force-login/pull/224) Make module compatible with Magento 2.4.5
+- [#218](https://github.com/bitExpert/magento2-force-login/pull/218) Upgrade PHPStan to version 1.7
+- [#217](https://github.com/bitExpert/magento2-force-login/pull/217) Update readme, add composer error instructions
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#223](https://github.com/bitExpert/magento2-force-login/pull/223) Add db_schema_whitelist.json to fix issue
+
 ## 5.0.1
 
 ### Added
