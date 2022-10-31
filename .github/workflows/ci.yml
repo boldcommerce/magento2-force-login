@@ -78,6 +78,7 @@ jobs:
         run: composer cs-check
 
       - name: Static code analysis
+        if: matrix.coveralls == true
         run: composer analyze
 
       - name: Unittests
