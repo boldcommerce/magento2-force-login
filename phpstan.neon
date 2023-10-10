@@ -29,6 +29,3 @@ parameters:
         -
             message: '~Call to an undefined method Magento\\Framework\\App\\RequestInterface::isPost\(\)~'
             path: Controller/LoginCheck.php
-        -
-            message: '~Parameter #3 \$data of method~'
-            path: Block/Adminhtml/Manage/Create.php
