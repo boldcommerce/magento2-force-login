@@ -11,6 +11,7 @@
 
 namespace BitExpert\ForceCustomerLogin\Test\Unit\Plugin;
 
+use BitExpert\ForceCustomerLogin\Controller\ModuleCheck;
 use BitExpert\ForceCustomerLogin\Model\Session;
 use BitExpert\ForceCustomerLogin\Plugin\AfterLoginPlugin;
 use Magento\Customer\Controller\Account\LoginPost;
@@ -41,9 +42,15 @@ class AfterLoginPluginUnitTest extends TestCase
             ->with(AfterLoginPlugin::REDIRECT_DASHBOARD_CONFIG)
             ->willReturn(AfterLoginPlugin::REDIRECT_DASHBOARD_ENABLED);
 
+        $moduleCheck = $this->getModuleCheck();
+        $moduleCheck->expects($this->once())
+            ->method('isModuleEnabled')
+            ->willReturn(true);
+
         $plugin = new AfterLoginPlugin(
             $session,
             $scopeConfig,
+            $moduleCheck,
             'default-target-url'
         );
 
@@ -70,9 +77,15 @@ class AfterLoginPluginUnitTest extends TestCase
             ->with(AfterLoginPlugin::REDIRECT_DASHBOARD_CONFIG)
             ->willReturn(AfterLoginPlugin::REDIRECT_DASHBOARD_DISABLED);
 
+        $moduleCheck = $this->getModuleCheck();
+        $moduleCheck->expects($this->once())
+            ->method('isModuleEnabled')
+            ->willReturn(true);
+
         $plugin = new AfterLoginPlugin(
             $session,
             $scopeConfig,
+            $moduleCheck,
             'default-target-url'
         );
 
@@ -101,9 +114,15 @@ class AfterLoginPluginUnitTest extends TestCase
             ->with(AfterLoginPlugin::REDIRECT_DASHBOARD_CONFIG)
             ->willReturn(AfterLoginPlugin::REDIRECT_DASHBOARD_DISABLED);
 
+        $moduleCheck = $this->getModuleCheck();
+        $moduleCheck->expects($this->once())
+            ->method('isModuleEnabled')
+            ->willReturn(true);
+
         $plugin = new AfterLoginPlugin(
             $session,
             $scopeConfig,
+            $moduleCheck,
             'default-target-url'
         );
 
@@ -112,6 +131,39 @@ class AfterLoginPluginUnitTest extends TestCase
         $redirect->expects($this->once())
             ->method('setUrl')
             ->with('default-target-url');
+
+        $this->assertEquals($redirect, $plugin->afterExecute($loginPost, $redirect));
+    }
+
+    /**
+     * @test
+     */
+    public function runAfterExecuteWithModuleDisabled()
+    {
+        $session = $this->getSession();
+        $session->expects($this->never())
+            ->method('getAfterLoginReferer');
+
+        $scopeConfig = $this->getScopeConfig();
+        $scopeConfig->expects($this->never())
+            ->method('getValue');
+
+        $moduleCheck = $this->getModuleCheck();
+        $moduleCheck->expects($this->once())
+            ->method('isModuleEnabled')
+            ->willReturn(false);
+
+        $plugin = new AfterLoginPlugin(
+            $session,
+            $scopeConfig,
+            $moduleCheck,
+            'default-target-url'
+        );
+
+        $loginPost = $this->getLoginPost();
+        $redirect = $this->getRedirect();
+        $redirect->expects($this->never())
+            ->method('setUrl');
 
         $this->assertEquals($redirect, $plugin->afterExecute($loginPost, $redirect));
     }
@@ -135,6 +187,16 @@ class AfterLoginPluginUnitTest extends TestCase
     private function getScopeConfig()
     {
         return $this->getMockBuilder(ScopeConfigInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * @return MockObject|ModuleCheck
+     */
+    private function getModuleCheck()
+    {
+        return $this->getMockBuilder(ModuleCheck::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
