@@ -11,6 +11,7 @@
 
 namespace BitExpert\ForceCustomerLogin\Plugin;
 
+use BitExpert\ForceCustomerLogin\Controller\ModuleCheck;
 use BitExpert\ForceCustomerLogin\Model\Session;
 use Magento\Customer\Controller\Account\LoginPost;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -38,13 +39,17 @@ class AfterLoginPlugin
      */
     private $session;
     /**
-     * @var string
-     */
-    private $defaultTargetUrl;
-    /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
+    /**
+     * @var ModuleCheck
+     */
+    private $moduleCheck;
+    /**
+     * @var string
+     */
+    private $defaultTargetUrl;
 
     /**
      * AfterLoginPlugin constructor.
@@ -56,10 +61,12 @@ class AfterLoginPlugin
     public function __construct(
         Session $session,
         ScopeConfigInterface $scopeConfig,
+        ModuleCheck $moduleCheck,
         $defaultTargetUrl
     ) {
         $this->session = $session;
         $this->scopeConfig = $scopeConfig;
+        $this->moduleCheck = $moduleCheck;
         $this->defaultTargetUrl = $defaultTargetUrl;
     }
 
@@ -72,6 +79,10 @@ class AfterLoginPlugin
      */
     public function afterExecute(LoginPost $customerAccountLoginController, ResultInterface $resultRedirect)
     {
+        if ($this->moduleCheck->isModuleEnabled() === false) {
+            return $resultRedirect;
+        }
+
         if (self::REDIRECT_DASHBOARD_ENABLED ===
             $this->scopeConfig->getValue(self::REDIRECT_DASHBOARD_CONFIG)) {
             return $resultRedirect;
