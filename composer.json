@@ -30,8 +30,8 @@
     "captainhook/captainhook": "^5.10.8",
     "captainhook/plugin-composer": "^5.3.3",
     "phpstan/extension-installer": "^1.1.0",
-    "phpstan/phpstan": "^1.7.2",
-    "bitexpert/phpstan-magento": "^0.23.0",
+    "phpstan/phpstan": "^1.10.0",
+    "bitexpert/phpstan-magento": "^0.30.0",
     "magento/magento-coding-standard": "^15"
     },
   "autoload": {
