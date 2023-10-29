@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 5.2.0
+- [#228](https://github.com/bitExpert/magento2-force-login/pull/228) Add module enabled check to plugin enabled
+- [#227](https://github.com/bitExpert/magento2-force-login/pull/227) add support for php 8.2
+
 ## 5.1.0
 
 ### Added
