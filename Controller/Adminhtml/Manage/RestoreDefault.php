@@ -11,8 +11,9 @@
 
 namespace BitExpert\ForceCustomerLogin\Controller\Adminhtml\Manage;
 
-use BitExpert\ForceCustomerLogin\Api\Repository\WhitelistRepositoryInterface;
-use BitExpert\ForceCustomerLogin\Model\WhitelistEntry;
+use BitExpert\ForceCustomerLogin\Model\WhitelistDefaultInstaller;
+use BitExpert\ForceCustomerLogin\Model\ResourceModel\WhitelistEntry as WhitelistEntryResource;
+use BitExpert\ForceCustomerLogin\Model\ResourceModel\WhitelistEntry\CollectionFactory as WhitelistEntryCollectionFactory;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
@@ -26,35 +27,25 @@ use Magento\Framework\Controller\ResultInterface;
  */
 class RestoreDefault extends \Magento\Backend\App\Action
 {
-    /**
-     * @var WhitelistRepositoryInterface
-     */
-    private $whitelistRepository;
-    /**
-     * @var RedirectFactory
-     */
-    private $redirectFactory;
-    /**
-     * @var array Default routes
-     */
-    private $defaultRoutes;
+    private RedirectFactory $redirectFactory;
+    private WhitelistDefaultInstaller $whitelistDefaultInstaller;
+    private WhitelistEntryResource $whitelistEntryResource;
+    private WhitelistEntryCollectionFactory $whitelistEntryCollectionFactory;
 
     /**
-     * Save constructor.
-     *
-     * @param WhitelistRepositoryInterface $whitelistRepository
-     * @param Context $context
-     * @param array $defaultRoutes
+     * RestoreDefault constructor.
      */
     public function __construct(
-        WhitelistRepositoryInterface $whitelistRepository,
         Context $context,
-        array $defaultRoutes
+        WhitelistDefaultInstaller $whitelistDefaultInstaller,
+        WhitelistEntryResource $whitelistEntryResource,
+        WhitelistEntryCollectionFactory $whitelistEntryCollectionFactory
     ) {
         parent::__construct($context);
-        $this->whitelistRepository = $whitelistRepository;
         $this->redirectFactory = $context->getResultRedirectFactory();
-        $this->defaultRoutes = $defaultRoutes;
+        $this->whitelistDefaultInstaller = $whitelistDefaultInstaller;
+        $this->whitelistEntryResource = $whitelistEntryResource;
+        $this->whitelistEntryCollectionFactory = $whitelistEntryCollectionFactory;
     }
 
     /**
@@ -67,16 +58,16 @@ class RestoreDefault extends \Magento\Backend\App\Action
         $result = $this->redirectFactory->create();
         $result->setPath('ForceCustomerLogin/Manage/index');
 
-        $whiteLists = $this->getWhiteListEntriesIndexedByPath();
-
         try {
-            foreach ($this->defaultRoutes as $route => $description) {
-                if (\array_key_exists($route, $whiteLists)) {
-                    continue;
-                }
+            $resource = $this->whitelistEntryResource;
+            $collection = $this->whitelistEntryCollectionFactory->create();
 
-                $this->whitelistRepository->createEntry(null, $description, $route);
-            }
+            $resource->beginTransaction();
+            $collection->walk(function ($entry) {
+                $entry->delete();
+            });
+            $this->whitelistDefaultInstaller->install();
+            $resource->commit();
         } catch (\Exception $e) {
             $result->setHttpResponseCode(\Magento\Framework\Webapi\Exception::HTTP_INTERNAL_ERROR);
             $this->messageManager->addErrorMessage(
@@ -91,24 +82,6 @@ class RestoreDefault extends \Magento\Backend\App\Action
         );
 
         return $result;
-    }
-
-    /**
-     * Get all current whitelists indexed by it's url rule
-     *
-     * @return array
-     */
-    protected function getWhiteListEntriesIndexedByPath()
-    {
-        $whiteListCollection = $this->whitelistRepository->getCollection();
-        $whiteLists = [];
-
-        foreach ($whiteListCollection->getItems() as $whiteList) {
-            $whiteLists[$whiteList->getData(WhitelistEntry::KEY_URL_RULE)] =
-                $whiteList->getData(WhitelistEntry::KEY_LABEL);
-        }
-
-        return $whiteLists;
     }
 
     /**

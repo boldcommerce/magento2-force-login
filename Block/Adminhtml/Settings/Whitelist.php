@@ -22,14 +22,14 @@ class Whitelist extends \Magento\Backend\Block\Widget\Container
     /**
      * @inheritDoc
      */
-    protected function _prepareLayout()
+    protected function _prepareLayout(): self
     {
         $restoreDefautsButtonProps = [
             'id' => 'restore_defaults',
             'label' => __('Restore Defaults'),
             'class' => 'primary add',
             'button_class' => '',
-            'onclick' => "setLocation('" . $this->getRestoreDefaultsUrl() . "')",
+            'on_click' => "deleteConfirm('{$this->getRestoreDefaultsConfirmationText()}', '{$this->getRestoreDefaultsUrl()}')",
             'class_name' => 'Magento\Backend\Block\Widget\Button'
         ];
         $this->buttonList->add('restore_defaults', $restoreDefautsButtonProps);
@@ -48,11 +48,21 @@ class Whitelist extends \Magento\Backend\Block\Widget\Container
     }
 
     /**
-     * Retrieve restore defaults url
-     *
-     * @return string
+     * Retrieve restore defaults confirmation text
      */
-    protected function getRestoreDefaultsUrl()
+    protected function getRestoreDefaultsConfirmationText(): string
+    {
+        return sprintf(
+            '<p>%s</p><p>%s</p>',
+            __('You will remove all existing whitelist entries and restore the defaults.'),
+            __('Are you sure you want to do this?')
+        );
+    }
+
+    /**
+     * Retrieve restore defaults url
+     */
+    protected function getRestoreDefaultsUrl(): string
     {
         return $this->getUrl(
             'ForceCustomerLogin/Manage/RestoreDefault'
@@ -61,10 +71,8 @@ class Whitelist extends \Magento\Backend\Block\Widget\Container
 
     /**
      * Retrieve create url
-     *
-     * @return string
      */
-    protected function getCreateUrl()
+    protected function getCreateUrl(): string
     {
         return $this->getUrl(
             'ForceCustomerLogin/Manage/Create'
