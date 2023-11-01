@@ -18,7 +18,7 @@ parameters:
         - Validator
         - view
     magento:
-            checkServiceContracts: false
+        checkServiceContracts: false
     ignoreErrors:
         -
             message: '~Parameter #1 \$modelId of method Magento\\Framework\\Model\\AbstractModel::load\(\) expects int, string given~'
