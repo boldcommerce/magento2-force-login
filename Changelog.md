@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 5.3.0
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#229](https://github.com/bitExpert/magento2-force-login/pull/229) Restore default whitelist all get static strategy
+
+
 ## 5.2.0
 
 ### Added
